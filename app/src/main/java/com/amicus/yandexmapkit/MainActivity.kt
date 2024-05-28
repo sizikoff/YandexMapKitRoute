@@ -27,6 +27,7 @@ import com.yandex.mapkit.directions.driving.DrivingRouterType
 import com.yandex.mapkit.directions.driving.DrivingSession
 import com.yandex.mapkit.directions.driving.VehicleOptions
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.location.FilteringMode
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.mapview.MapView
@@ -57,21 +58,23 @@ class MainActivity : AppCompatActivity(),DrivingSession.DrivingRouteListener {
         Log.d("COORD",locationc.toString())
         Animation(Animation.Type.LINEAR,300f)
         val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+
             val lastKnownLocation =
                 locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            lastKnownLocation?.let { location ->
-                val latitude = location.latitude
-                val longitude = location.longitude
+
+                val latitude = lastKnownLocation!!.latitude
+                val longitude = lastKnownLocation!!.longitude
                 // Используйте координаты
 
-                START_POSITION = Point(lastKnownLocation?.latitude.toString().toDouble(),lastKnownLocation?.longitude.toString().toDouble())
+                START_POSITION = Point(latitude,longitude)
 
                 fused = LocationServices.getFusedLocationProviderClient(this)
                 fused.lastLocation.addOnSuccessListener {location: Location? ->
                     END = Point(location?.latitude.toString().toDouble(),location?.longitude.toString().toDouble())
                     true
                 }
-            }
+
 
 
         drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.ONLINE)
